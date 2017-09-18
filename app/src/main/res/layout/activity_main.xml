@@ -27,6 +27,7 @@
     tools:context="com.josecuentas.android_exercise_mvp_order_kotlin.ui.main.MainActivity">
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/rviItem"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:overScrollMode="never"

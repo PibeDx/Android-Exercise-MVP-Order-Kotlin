@@ -18,12 +18,43 @@ package com.josecuentas.android_exercise_mvp_order_kotlin.ui.main
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.widget.Toast
 import com.josecuentas.android_exercise_mvp_order_kotlin.R
+import com.josecuentas.android_exercise_mvp_order_kotlin.domain.model.Item
+import com.josecuentas.android_exercise_mvp_order_kotlin.ui.adapters.ItemAdapter
+import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ItemAdapter.OnItemAdapterListener {
+
+    lateinit var itemAdapter: ItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setup()
+
+        itemAdapter.itemList = MainDummy.getItems()
+        itemAdapter.notifyDataSetChanged()
+    }
+
+    private fun setup() {
+        setupAdapter()
+        setupRecycler()
+    }
+
+    private fun setupAdapter() {
+        itemAdapter = ItemAdapter()
+        itemAdapter.listener = this
+    }
+
+    private fun setupRecycler() {
+        rviItem.layoutManager = LinearLayoutManager(this)
+        rviItem.addItemDecoration(CustomItemDecoration(10))
+        rviItem.adapter = itemAdapter
+    }
+
+    override fun onItemClick(item: Item) {
+        Toast.makeText(this, "click in ${item.itemId}", Toast.LENGTH_SHORT).show()
     }
 }
