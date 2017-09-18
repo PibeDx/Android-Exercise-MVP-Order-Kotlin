@@ -43,19 +43,20 @@ class MainPresenter : MainContract.Presenter, MainContract.Listener {
     override fun getItems() {
         this.view?.showLoading()
 
-        //val item = itemList.find { it.touch >= 3 }
-
-        val byPoint = compareByDescending (Item::point)
-        val byTimestamp = compareByDescending (Item::timestamp)
-        val byPointThenTimestamp = byPoint.then(byTimestamp)
-        itemList.sortWith(byPointThenTimestamp)
+        val item = itemList.find { it.touch >= Item.MAX_TOUCH }
+        if (item != null) {
+            val byPoint = compareByDescending (Item::point)
+            val byTimestamp = compareByDescending (Item::timestamp)
+            val byPointThenTimestamp = byPoint.then(byTimestamp)
+            itemList.sortWith(byPointThenTimestamp)
+        }
 
         this.view?.loadItems(itemList)
         this.view?.hideLoading()
     }
 
     override fun goItemDetail(item: Item) {
-        item.addPoint()
+        item.addTouch()
         this.view?.goItemDetail(item)
 
         getItems()

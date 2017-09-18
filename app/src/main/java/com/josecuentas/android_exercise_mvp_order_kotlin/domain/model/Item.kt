@@ -23,13 +23,17 @@ import java.util.*
  */
 data class Item(val itemId: Int = -1, val resourceColorId: Int, var point: Int = 0) {
 
+    companion object {
+        val MAX_TOUCH = 3
+    }
+
     var timestamp: Date = Date()
     var touch: Int = 0
 
 
     fun addTouch() {
         touch += 1
-        if (touch >= 3) addPoint()
+        if (touch >= MAX_TOUCH) addPoint()
     }
 
     fun resetTouch() {

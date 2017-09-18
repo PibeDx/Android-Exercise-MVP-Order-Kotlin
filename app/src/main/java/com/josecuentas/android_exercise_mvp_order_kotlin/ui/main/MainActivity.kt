@@ -79,6 +79,6 @@ class MainActivity : AppCompatActivity(), ItemAdapter.OnItemAdapterListener, Mai
     }
 
     override fun goItemDetail(item: Item) {
-        Toast.makeText(this, "itemId: ${item.itemId} point: ${item.point}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "itemId: ${item.itemId} point: ${item.point} touch: ${item.touch}", Toast.LENGTH_SHORT).show()
     }
 }
