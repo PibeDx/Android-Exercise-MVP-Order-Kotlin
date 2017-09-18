@@ -14,34 +14,13 @@
  * limitations under the License.
  */
 
-package com.josecuentas.android_exercise_mvp_order_kotlin.domain.model
-
-import java.util.*
+package com.josecuentas.android_exercise_mvp_order_kotlin.ui
 
 /**
  * Created by jcuentas on 18/09/17.
  */
-data class Item(val itemId: Int = -1, val resourceColorId: Int, var point: Int = 0) {
-
-    var timestamp: Date = Date()
-    var touch: Int = 0
-
-
-    fun addTouch() {
-        touch += 1
-        if (touch >= 3) addPoint()
-    }
-
-    fun resetTouch() {
-        touch = 0
-    }
-
-    fun addPoint() {
-        updateDate()
-        point += 1
-    }
-
-    fun updateDate() {
-        timestamp = Date()
-    }
+interface IPresenter<View> {
+    fun attached(view: View)
+    fun detached()
+    fun destroyed()
 }

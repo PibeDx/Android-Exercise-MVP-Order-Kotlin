@@ -14,34 +14,29 @@
  * limitations under the License.
  */
 
-package com.josecuentas.android_exercise_mvp_order_kotlin.domain.model
 
-import java.util.*
+package com.josecuentas.android_exercise_mvp_order_kotlin.ui.main
+
+import com.josecuentas.android_exercise_mvp_order_kotlin.domain.model.Item
+import com.josecuentas.android_exercise_mvp_order_kotlin.ui.IPresenter
 
 /**
  * Created by jcuentas on 18/09/17.
  */
-data class Item(val itemId: Int = -1, val resourceColorId: Int, var point: Int = 0) {
+interface MainContract {
 
-    var timestamp: Date = Date()
-    var touch: Int = 0
-
-
-    fun addTouch() {
-        touch += 1
-        if (touch >= 3) addPoint()
+    interface View {
+        fun showLoading()
+        fun hideLoading()
+        fun loadItems(itemList: List<Item>)
+        fun goItemDetail(item: Item)
     }
 
-    fun resetTouch() {
-        touch = 0
+    interface Listener {
+        fun goItemDetail(item: Item)
     }
 
-    fun addPoint() {
-        updateDate()
-        point += 1
-    }
-
-    fun updateDate() {
-        timestamp = Date()
+    interface Presenter : IPresenter<View> {
+        fun getItems()
     }
 }
