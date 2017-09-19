@@ -16,6 +16,7 @@
 
 package com.josecuentas.android_exercise_mvp_order_kotlin.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -24,12 +25,13 @@ import android.widget.Toast
 import com.josecuentas.android_exercise_mvp_order_kotlin.R
 import com.josecuentas.android_exercise_mvp_order_kotlin.domain.model.Item
 import com.josecuentas.android_exercise_mvp_order_kotlin.ui.adapters.ItemAdapter
+import com.josecuentas.android_exercise_mvp_order_kotlin.ui.main.detail.MainDetailActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), ItemAdapter.OnItemAdapterListener, MainContract.View {
 
     lateinit var itemAdapter: ItemAdapter
-    lateinit var presenter: MainPresenter
+    val presenter: MainPresenter by lazy { MainPresenter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +43,7 @@ class MainActivity : AppCompatActivity(), ItemAdapter.OnItemAdapterListener, Mai
     }
 
     private fun injectPresenter() {
-        presenter = MainPresenter()
+        //presenter = MainPresenter()
         presenter.attached(this)
     }
 
@@ -80,5 +82,15 @@ class MainActivity : AppCompatActivity(), ItemAdapter.OnItemAdapterListener, Mai
 
     override fun goItemDetail(item: Item) {
         Toast.makeText(this, "itemId: ${item.itemId} point: ${item.point} touch: ${item.touch}", Toast.LENGTH_SHORT).show()
+        val bundle = Bundle()
+        bundle.putSerializable(Item.BUNDLE, item)
+        val intent = Intent(this@MainActivity, MainDetailActivity::class.java)
+        intent.putExtras(bundle)
+        startActivity(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.destroyed()
     }
 }

@@ -16,14 +16,16 @@
 
 package com.josecuentas.android_exercise_mvp_order_kotlin.domain.model
 
+import java.io.Serializable
 import java.util.*
 
 /**
  * Created by jcuentas on 18/09/17.
  */
-data class Item(val itemId: Int = -1, val resourceColorId: Int, var point: Int = 0) {
+data class Item(val itemId: Int = -1, val resourceColorId: Int, var point: Int = 0) : Serializable {
 
     companion object {
+        val BUNDLE = ".item"
         val MAX_TOUCH = 3
     }
 

@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- -->
-
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.josecuentas.android_exercise_mvp_order_kotlin">
 
@@ -33,6 +32,8 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity android:name=".ui.main.detail.MainDetailActivity">
         </activity>
     </application>
 
