@@ -25,6 +25,12 @@ import java.util.*
 data class Item(val itemId: Int = -1, val resourceColorId: Int, var point: Int = 0) : Serializable {
 
     companion object {
+        val ITEM_ID = ".itemId"
+        val RESOURCE_COLOR_ID = ".resourceColorId"
+        val POINT = ".point"
+        val TIMESTAMP = ".timestamp"
+        val TOUCH = ".touch"
+
         val BUNDLE = ".item"
         val MAX_TOUCH = 3
     }
