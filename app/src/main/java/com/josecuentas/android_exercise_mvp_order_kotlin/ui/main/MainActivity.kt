@@ -16,6 +16,7 @@
 
 package com.josecuentas.android_exercise_mvp_order_kotlin.ui.main
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -23,6 +24,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
 import com.josecuentas.android_exercise_mvp_order_kotlin.R
+import com.josecuentas.android_exercise_mvp_order_kotlin.data.local.ItemRepository
 import com.josecuentas.android_exercise_mvp_order_kotlin.domain.model.Item
 import com.josecuentas.android_exercise_mvp_order_kotlin.ui.adapters.ItemAdapter
 import com.josecuentas.android_exercise_mvp_order_kotlin.ui.main.detail.MainDetailActivity
@@ -31,15 +33,28 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), ItemAdapter.OnItemAdapterListener, MainContract.View {
 
     lateinit var itemAdapter: ItemAdapter
-    val presenter: MainPresenter by lazy { MainPresenter() }
+    val presenter: MainPresenter by lazy { MainPresenter(getSharedPreferences(ItemRepository.PATH, Context.MODE_PRIVATE)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         injectPresenter()
         setup()
+    }
+
+    override fun onResume() {
+        super.onResume()
         //call service
         presenter.getItems()
+    }
+
+    private fun restoreState(savedInstanceState: Bundle) {
+        val itemList: List<Item> = savedInstanceState.getSerializable(Item.BUNDLE_LIST) as List<Item>
+        presenter.loadPresenterState(itemList)
+    }
+
+    private fun saveState(outState: Bundle?) {
+        outState?.putSerializable(Item.BUNDLE_LIST, presenter.itemList as ArrayList)
     }
 
     private fun injectPresenter() {
@@ -92,5 +107,17 @@ class MainActivity : AppCompatActivity(), ItemAdapter.OnItemAdapterListener, Mai
     override fun onDestroy() {
         super.onDestroy()
         presenter.destroyed()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        saveState(outState)
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        if (savedInstanceState != null) {
+            restoreState(savedInstanceState)
+        }
+        super.onRestoreInstanceState(savedInstanceState)
     }
 }

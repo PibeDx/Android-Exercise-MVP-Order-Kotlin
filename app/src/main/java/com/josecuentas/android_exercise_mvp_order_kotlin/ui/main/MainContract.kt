@@ -34,6 +34,7 @@ interface MainContract {
 
     interface Listener {
         fun goItemDetail(item: Item)
+        fun loadPresenterState(itemList: List<Item>?)
     }
 
     interface Presenter : IPresenter<View> {

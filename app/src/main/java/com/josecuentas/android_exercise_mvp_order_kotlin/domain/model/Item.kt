@@ -32,6 +32,7 @@ data class Item(val itemId: Int = -1, val resourceColorId: Int, var point: Int =
         val TOUCH = ".touch"
 
         val BUNDLE = ".item"
+        val BUNDLE_LIST = ".item_list"
         val MAX_TOUCH = 3
     }
 

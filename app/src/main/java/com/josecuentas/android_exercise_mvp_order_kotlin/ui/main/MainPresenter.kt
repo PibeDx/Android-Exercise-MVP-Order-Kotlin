@@ -17,16 +17,19 @@
 
 package com.josecuentas.android_exercise_mvp_order_kotlin.ui.main
 
+import android.content.SharedPreferences
+import com.josecuentas.android_exercise_mvp_order_kotlin.data.local.ItemLocalRepository
 import com.josecuentas.android_exercise_mvp_order_kotlin.domain.model.Item
 
 /**
  * Created by jcuentas on 18/09/17.
  */
-class MainPresenter : MainContract.Presenter, MainContract.Listener {
+class MainPresenter(preferences: SharedPreferences) : MainContract.Presenter, MainContract.Listener {
+
 
     private var view: MainContract.View? = null
-    private val itemList: MutableList<Item>  by lazy { MainDummy.getItems() }
-    var map: MutableMap<Int, Int> = HashMap()
+    val itemList: MutableList<Item> = ArrayList()
+    val itemRepository = ItemLocalRepository(preferences)
 
     override fun attached(view: MainContract.View) {
         this.view = view
@@ -42,11 +45,15 @@ class MainPresenter : MainContract.Presenter, MainContract.Listener {
 
     override fun getItems() {
         this.view?.showLoading()
+        if (itemList.isEmpty()) {
+            itemList.addAll(itemRepository.getITems())
+            reset()
+        }
 
         val item = itemList.find { it.touch >= Item.MAX_TOUCH }
         if (item != null) {
-            val byPoint = compareByDescending (Item::point)
-            val byTimestamp = compareByDescending (Item::timestamp)
+            val byPoint = compareByDescending(Item::point)
+            val byTimestamp = compareByDescending(Item::timestamp)
             val byPointThenTimestamp = byPoint.then(byTimestamp)
             itemList.sortWith(byPointThenTimestamp)
         }
@@ -55,15 +62,21 @@ class MainPresenter : MainContract.Presenter, MainContract.Listener {
         this.view?.hideLoading()
     }
 
+    fun reset() {
+        // reset touch
+        itemList.map { it.resetTouch() }
+    }
+
     override fun goItemDetail(item: Item) {
         item.addTouch()
+        itemRepository.saveItems(itemList)
         this.view?.goItemDetail(item)
-
         getItems()
-//        val isContent = map.containsKey(item.itemId)
-//        if (isContent) {
-//            var point: Int = map.get(item.itemId)!!
-//            map.put(item.itemId, point++)
-//        } else map.put(item.itemId, 1)
+    }
+
+    override fun loadPresenterState(itemList: List<Item>?) {
+        if (itemList != null) {
+            this.itemList.addAll(itemList)
+        }
     }
 }
