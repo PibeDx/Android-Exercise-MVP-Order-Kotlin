@@ -47,19 +47,24 @@ class MainPresenter(preferences: SharedPreferences) : MainContract.Presenter, Ma
         this.view?.showLoading()
         if (itemList.isEmpty()) {
             itemList.addAll(itemRepository.getITems())
+            orderByPointThenTimestamp()
             reset()
         }
 
         val item = itemList.find { it.touch >= Item.MAX_TOUCH }
         if (item != null) {
-            val byPoint = compareByDescending(Item::point)
-            val byTimestamp = compareByDescending(Item::timestamp)
-            val byPointThenTimestamp = byPoint.then(byTimestamp)
-            itemList.sortWith(byPointThenTimestamp)
+            orderByPointThenTimestamp()
         }
 
         this.view?.loadItems(itemList)
         this.view?.hideLoading()
+    }
+
+    fun orderByPointThenTimestamp() {
+        val byPoint = compareByDescending(Item::point)
+        val byTimestamp = compareByDescending(Item::timestamp)
+        val byPointThenTimestamp = byPoint.then(byTimestamp)
+        itemList.sortWith(byPointThenTimestamp)
     }
 
     fun reset() {
